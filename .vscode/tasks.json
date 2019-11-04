@@ -1,0 +1,64 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "label": "build",
+            "type": "shell",
+            "command": "make install",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": "$gcc",
+            "dependsOrder": "sequence",
+            "dependsOn":[
+                "build_cmake",
+                "build_make"
+            ]
+        },
+        {
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "label": "build_make",
+            "type": "shell",
+            "command": "make",
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": "$gcc"
+        },
+        {
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "label": "build_cmake",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-DCAMKE_BUILD_TYPE=Debug",
+                ".."
+            ],
+            "group": "build",
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": "$gcc"
+        }
+    ]
+}

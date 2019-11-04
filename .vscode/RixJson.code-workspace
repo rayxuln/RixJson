@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "/Users/raymond_lx/Documents/MyProjects/RixJson"
+		}
+	],
+	"settings": {
+		"C_Cpp.default.includePath": [
+			"./inc"
+		],
+		"files.associations": {
+			"bitset": "cpp",
+			"ios": "cpp",
+			"locale": "cpp",
+			"string": "cpp",
+			"iostream": "cpp",
+			"__config": "cpp",
+			"codecvt": "cpp",
+			"iosfwd": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"vector": "cpp"
+		}
+	}
+}
