@@ -1,2 +1,2 @@
 # RixJson
-A Json Doc Decode Lib by Myself.
+A Json Doc Decode Lib made by Rayxuln.
