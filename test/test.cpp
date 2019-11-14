@@ -7,7 +7,7 @@ using namespace Rix;
 
 int main()
 {
-    string jsonDoc = "{\'Test\':\'666\', \'What\':[0,1,{\'a\':\'b\',\'f\':3.14}], \'ee\':{\'a\':3.4,'is':false}}", s;
+    string jsonDoc = R"({'Test':'666', 'What':[0,1,{'a':'b','f':3.14}], 'ee':{'a':3.4,'is':false}})", s;
     //while(getline(cin, s)) jsonDoc += s + '\n'; 
     cout<<">====| Test Begin |====<"<<endl;
     cout<<"> Test Json:"<<endl<<jsonDoc<<endl<<endl;

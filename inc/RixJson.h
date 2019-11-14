@@ -8,6 +8,8 @@
 #include <exception>
 #include <vector>
 
+#define ENUM_STR(x) (#x)
+
 namespace Rix
 {
 
@@ -48,7 +50,7 @@ namespace Rix
 
             std::string ToStr(bool beaty = true);
 
-            Object &operator= (Object &o);
+            Object &operator= (const Object &o);
             
             Object();
             ~Object();
