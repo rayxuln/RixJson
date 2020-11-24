@@ -3,10 +3,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 
-// #define ENABLE_DEBUG_MESSAGE_MATCHING
-// #define ENABLE_DEBUG_MESSAGE_FOUND
+//#define ENABLE_DEBUG_MESSAGE_MATCHING
+//#define ENABLE_DEBUG_MESSAGE_FOUND
 
 #ifdef ENABLE_DEBUG_MESSAGE_MATCHING
 #define DEBUG_MESSAGE_MATCHING(x) {x}
@@ -66,6 +67,94 @@ void Object::SetChild(SizeType index, Object &o)
 void Object::AddChild(Object &o)
 {
     children.push_back(o);
+}
+
+//array add
+void Object::Add(const std::string &v){
+    Object jo;
+    jo.SetType(STRING);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(double v){
+    Object jo;
+    jo.SetType(REAL);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(bool v){
+    Object jo;
+    jo.SetType(BOOLEAN);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(Object &o){
+    AddChild(o);
+}
+
+//object add
+void Object::Add(const std::string &k, const std::string &v){
+    Object jo;
+    jo.SetType(STRING);
+    jo.SetToastKey(k);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(const std::string &k, double v){
+    Object jo;
+    jo.SetType(REAL);
+    jo.SetToastKey(k);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(const std::string &k, bool v){
+    Object jo;
+    jo.SetType(BOOLEAN);
+    jo.SetToastKey(k);
+    jo.Set(v);
+    AddChild(jo);
+}
+void Object::Add(const std::string &k, Object &o){
+    o.SetToastKey(k);
+    AddChild(o);
+}
+
+std::string Object::AsString(){
+    if(value.size() < 2) return "";
+    return string(value.begin()+1, value.end()-1);
+}
+int Object::AsInt(){
+    stringstream ss;
+    ss<<value;
+    int res;
+    ss>>res;
+    return res;
+}
+float Object::AsFloat(){
+    stringstream ss;
+    ss<<value;
+    float res;
+    ss>>res;
+    return res;
+}
+double Object::AsDouble(){
+    stringstream ss;
+    ss<<value;
+    double res;
+    ss>>res;
+    return res;
+}
+bool Object::AsBool(){
+    if(value == "true") return true;
+    if(value == "false") return false;
+    stringstream ss;
+    ss<<value;
+    bool res;
+    ss>>res;
+    return res;
+}
+std::vector<Object> &Object::AsArray(){
+    return children;
 }
 
 void _ObjectToStr(stringstream &ss, Object &o, SizeType index, Object *po, SizeType d, bool b)
@@ -144,11 +233,67 @@ Object &Object::operator=(const Object &o)
     return *this;
 }
 
+Object &Object::Get(std::string k) {
+    for(auto &o:children)
+    {
+        if(o.GetToastKey() == k)
+        {
+            return o;
+        }
+    }
+    throw NullObjectException();
+}
+
+Object &Object::Get(SizeType index) {
+    return GetChild(index);
+}
+
+bool Object::Has(std::string k) {
+    for(auto &o:children)
+    {
+        if(o.GetToastKey() == k)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Object::Set(std::string v) {
+    value = "\"";
+    value += v;
+    value += "\"";
+}
+
+void Object::Set(double v) {
+    stringstream  ss;
+    ss<<v;
+    ss>>value;
+}
+
+void Object::Set(bool v) {
+    stringstream  ss;
+    ss<<v;
+    ss>>value;
+}
+
+std::string Object::GetToastKey() {
+    if(key.size() < 2)
+        return string();
+    return string(key.begin()+1, key.end()-1);
+}
+
+void Object::SetToastKey(std::string s) {
+    key = "\"";
+    key += s;
+    key += "\"";
+}
+
 const char *ParserException::what() const throw()
 {
-    return (string("\nParsing error: \n") + errorMsg).c_str();
+    return errorMsg.c_str();
 }
-ParserException::ParserException(std::string _s):errorMsg(_s){}
+ParserException::ParserException(std::string _s):errorMsg(std::move(_s)){}
 ParserException::~ParserException(){}
 
 /*
@@ -228,7 +373,9 @@ void Parser::_JsonKeyAndValue(Object &p)
 void Parser::_JsonArray(Object &p)
 {
     _Match('[');
-    _JsonValueS(p);
+    _Blanks();
+    if(NEXT != ']')
+        _JsonValueS(p);
     _Match(']');
 }
 void Parser::_JsonValueS(Object &p)
@@ -435,3 +582,4 @@ Object Parser::Parse()
 
     return jObject;
 }
+
